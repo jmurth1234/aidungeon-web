@@ -40,7 +40,7 @@ const Index = () => {
       setStage("login");
     } else {
       nookies.set({}, "auth", result.accessToken);
-      setStage("register")
+      setStage("register");
     }
   };
 
@@ -159,6 +159,12 @@ const Index = () => {
             <h2>Error: {error}</h2>
           </div>
         )}
+
+        <div className="row">
+          <h2>
+            <a href="https://github.com/rymate1234/aidungeon-web">View the source on Github</a>
+          </h2>
+        </div>
       </div>
     </div>
   );
