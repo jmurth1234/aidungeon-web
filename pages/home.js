@@ -168,7 +168,7 @@ const Home = props => {
           </div>
 
           {props.sessions.map(session => (
-            <div className="row">
+            <div className={`row ${session.conclusion}`}>
               <a href={`/session/${session.id}`}>{session.story[0].value}</a>
             </div>
           ))}

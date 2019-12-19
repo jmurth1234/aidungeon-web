@@ -7,8 +7,8 @@ const Nav = () => (
       font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
         Helvetica, sans-serif;
     }
- 
-    * { 
+
+    * {
       box-sizing: border-box;
     }
 
@@ -79,13 +79,17 @@ const Nav = () => (
     }
 
     .input::before {
-      content: '> ';
+      content: "> ";
     }
 
     .input {
       margin: 5px 0;
       color: #dddddd;
       font-style: italic;
+    }
+
+    .lose {
+      text-decoration: line-through;
     }
 
     .terminal input {
