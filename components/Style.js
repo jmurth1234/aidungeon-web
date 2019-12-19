@@ -75,6 +75,7 @@ const Nav = () => (
       background-color: #000000;
       color: #ffffff;
       padding: 10px;
+      white-space: pre-line;
     }
 
     .input::before {
