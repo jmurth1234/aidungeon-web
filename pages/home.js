@@ -5,11 +5,12 @@ import get from "../lib/basic-get";
 import nookies from "nookies";
 import Router from "next/router";
 import Select from "react-select";
+import LoadingIndicator from "react-loading-indicator";
 
 const Home = props => {
   const config = props.config.modes;
   const [error, setError] = useState();
-
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     customPrompt: "",
     setting: ""
@@ -39,6 +40,7 @@ const Home = props => {
   };
 
   const begin = async e => {
+    setLoading(true);
     e.preventDefault();
     const request = {};
     if (data.customPrompt) {
@@ -68,13 +70,14 @@ const Home = props => {
     } catch (e) {
       setError("Time out, AI Dungeon too slow");
     }
+    setLoading(false);
   };
 
   const logout = () => {
     nookies.set({}, "auth", "");
 
     Router.push("/");
-  }
+  };
 
   return (
     <div>
@@ -82,18 +85,18 @@ const Home = props => {
         <title>AIDungeon Web</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Style />
-
       <div className="hero">
         <h1 className="title">Welcome</h1>
-        <p className="description"><a href="#" onClick={logout}>Logout</a></p>
+        <p className="description">
+          <a href="#" onClick={logout}>
+            Logout
+          </a>
+        </p>
       </div>
-
       <div className="row">
         <h2>Create new game</h2>
       </div>
-
       <form onSubmit={begin}>
         <div className="row">
           <Select
@@ -148,13 +151,16 @@ const Home = props => {
           </div>
         )}
       </form>
-
+      {loading && (
+        <div className="row">
+          <LoadingIndicator />
+        </div>
+      )}
       {error && (
         <div className="row">
           <h2>Error: {error}</h2>
         </div>
       )}
-
       {props.sessions && props.sessions.length && (
         <>
           <div className="row">

@@ -6,6 +6,7 @@ import nookies from "nookies";
 import Router from "next/router";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { css } from "glamor";
+import LoadingIndicator from "react-loading-indicator";
 
 const termCss = css({
   maxHeight: 600
@@ -16,11 +17,13 @@ const Session = props => {
   const [history, setHistory] = useState(props.session.story);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const setField = e => {
     setInput(e.currentTarget.value);
   };
   const sendLine = async e => {
+    setLoading(true)
     e.preventDefault();
 
     const req = await fetch("/api/session/" + url.query.id, {
@@ -46,6 +49,7 @@ const Session = props => {
         "Time out, AI Dungeon too slow. The request may have already gotten through, in which case refreshing will continue"
       );
     }
+    setLoading(false)
   };
 
   return (
@@ -82,6 +86,12 @@ const Session = props => {
           </div>
         </ScrollToBottom>
       </div>
+
+      {loading && (
+        <div className="row">
+          <LoadingIndicator />
+        </div>
+      )}
 
       {error && (
         <div className="row">

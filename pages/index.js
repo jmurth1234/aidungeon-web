@@ -3,6 +3,7 @@ import Head from "next/head";
 import Style from "../components/Style";
 import Router from "next/router";
 import nookies from "nookies";
+import LoadingIndicator from "react-loading-indicator";
 
 const Index = () => {
   const [data, setData] = useState({
@@ -12,6 +13,7 @@ const Index = () => {
   });
   const [stage, setStage] = useState("email");
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const setField = e => {
     const newData = {
@@ -26,7 +28,9 @@ const Index = () => {
   };
 
   const checkEmail = async e => {
+    setLoading(true);
     e.preventDefault();
+
     const request = await fetch("/api/auth", {
       method: "POST",
       headers: {
@@ -43,9 +47,12 @@ const Index = () => {
       nookies.set({}, "auth", result.accessToken);
       setStage("register");
     }
+
+    setLoading(false);
   };
 
   const handleLogin = async e => {
+    setLoading(true);
     e.preventDefault();
 
     const request = await fetch("/api/auth", {
@@ -66,9 +73,12 @@ const Index = () => {
 
       Router.push("/home");
     }
+
+    setLoading(false);
   };
 
-  const handleRegister = async e=> {
+  const handleRegister = async e => {
+    setLoading(true);
     e.preventDefault();
 
     const request = await fetch("/api/modify-user", {
@@ -86,6 +96,8 @@ const Index = () => {
     } else {
       Router.push("/home");
     }
+
+    setLoading(false);
   };
 
   const formActions = {
@@ -115,6 +127,7 @@ const Index = () => {
               value={data.email}
               placeholder="Enter Email Address"
               onChange={setField}
+              disabled={loading}
             />
           </div>
 
@@ -135,11 +148,12 @@ const Index = () => {
                   value={data.password}
                   placeholder="Enter Password"
                   onChange={setField}
+                  disabled={loading}
                 />
               </div>
 
               <div className="row">
-                <button type='submit' className="button" onClick={handleLogin}>
+                <button type="submit" className="button" onClick={handleLogin}>
                   Login
                 </button>
               </div>
@@ -155,17 +169,28 @@ const Index = () => {
                   value={data.password}
                   placeholder="Enter Password"
                   onChange={setField}
+                  disabled={loading}
                 />
               </div>
 
               <div className="row">
-                <button type='submit' className="button" onClick={handleRegister}>
+                <button
+                  type="submit"
+                  className="button"
+                  onClick={handleRegister}
+                >
                   Register
                 </button>
               </div>
             </>
           )}
         </form>
+
+        {loading && (
+          <div className="row">
+            <LoadingIndicator />
+          </div>
+        )}
 
         {error && (
           <div className="row">
