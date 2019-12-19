@@ -12,8 +12,8 @@ const termCss = css({
   maxHeight: 600
 });
 
-const getSession = async () => {
-  const requestSessions = await fetch("/api/session/" + query.id, {
+const getSession = async id => {
+  const requestSessions = await fetch("/api/session/" + id, {
     method: "GET"
   });
   return {
@@ -23,6 +23,7 @@ const getSession = async () => {
 
 const Session = props => {
   const { url } = props;
+  const id = url.query.id;
   const [history, setHistory] = useState(props.session.story);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -33,22 +34,22 @@ const Session = props => {
   };
 
   const refresh = async () => {
-    const { session } = await getSession();
+    const { session } = await getSession(id);
 
     if (session && session.length) {
       setHistory(session);
       setError("");
       setLoading(false);
     } else {
-      setTimeout(refresh, 10000)
+      setTimeout(refresh, 10000);
     }
-  }
+  };
 
   const sendLine = async e => {
     setLoading(true);
     e.preventDefault();
 
-    const req = await fetch("/api/session/" + url.query.id, {
+    const req = await fetch("/api/session/" + id, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -71,7 +72,7 @@ const Session = props => {
       setError(
         "Time out, AI Dungeon too slow. The request may have already gotten through, in which case we'll attempt to refresh"
       );
-      refresh()
+      refresh();
     }
   };
 
@@ -147,9 +148,9 @@ Session.getInitialProps = async ctx => {
     );
 
     return { session };
-  } 
-  
-  return getSession()
+  }
+
+  return getSession(query.id);
 };
 
 export default Session;
