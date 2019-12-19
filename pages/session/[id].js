@@ -26,17 +26,18 @@ const Session = props => {
       body: JSON.stringify({ text: input })
     });
 
-    const session = await req.json();
+    try {
+      const session = await req.json();
 
-    setInput("");
-    if (session && !session.error) {
-      setHistory(session);
-    } else {
-      setError(
-        session && session.error
-          ? session.error
-          : "Timed out, AI Dungeon too slow"
-      );
+      setInput("");
+      if (session && !session.error) {
+        setHistory(session);
+        setError("");
+      } else {
+        setError(session ? session.error : "Timed out, AI Dungeon too slow");
+      }
+    } catch (e) {
+      setError("Time out, AI Dungeon too slow");
     }
   };
 

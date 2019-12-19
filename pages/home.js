@@ -57,12 +57,16 @@ const Home = props => {
       body: JSON.stringify(request)
     });
 
-    const result = await req.json();
+    try {
+      const result = await req.json();
 
-    if (result && result.id) {
-      Router.push("/session/" + result.id);
-    } else {
-      setError(result && result.error ? result.error : 'Timed Out');
+      if (result && result.id) {
+        Router.push("/session/" + result.id);
+      } else {
+        setError(result && result.error ? result.error : "Timed Out");
+      }
+    } catch (e) {
+      setError("Time out, AI Dungeon too slow");
     }
   };
 
