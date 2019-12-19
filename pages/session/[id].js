@@ -12,6 +12,15 @@ const termCss = css({
   maxHeight: 600
 });
 
+const getSession = async () => {
+  const requestSessions = await fetch("/api/session/" + query.id, {
+    method: "GET"
+  });
+  return {
+    session: await requestSessions.json()
+  };
+};
+
 const Session = props => {
   const { url } = props;
   const [history, setHistory] = useState(props.session.story);
@@ -22,8 +31,21 @@ const Session = props => {
   const setField = e => {
     setInput(e.currentTarget.value);
   };
+
+  const refresh = async () => {
+    const { session } = await getSession();
+
+    if (session && session.length) {
+      setHistory(session);
+      setError("");
+      setLoading(false);
+    } else {
+      setTimeout(refresh, 10000)
+    }
+  }
+
   const sendLine = async e => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
 
     const req = await fetch("/api/session/" + url.query.id, {
@@ -41,15 +63,16 @@ const Session = props => {
       if (session && !session.error) {
         setHistory(session);
         setError("");
+        setLoading(false);
       } else {
         setError(session ? session.error : "Timed out, AI Dungeon too slow");
       }
     } catch (e) {
       setError(
-        "Time out, AI Dungeon too slow. The request may have already gotten through, in which case refreshing will continue"
+        "Time out, AI Dungeon too slow. The request may have already gotten through, in which case we'll attempt to refresh"
       );
+      refresh()
     }
-    setLoading(false)
   };
 
   return (
@@ -124,14 +147,9 @@ Session.getInitialProps = async ctx => {
     );
 
     return { session };
-  } else {
-    const requestSessions = await fetch("/api/session/" + query.id, {
-      method: "GET"
-    });
-    return {
-      session: await requestSessions.json()
-    };
-  }
+  } 
+  
+  return getSession()
 };
 
 export default Session;
