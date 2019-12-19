@@ -8,6 +8,7 @@ import Select from "react-select";
 
 const Home = props => {
   const config = props.config.modes;
+  const [error, setError] = useState();
 
   const [data, setData] = useState({
     customPrompt: "",
@@ -58,8 +59,10 @@ const Home = props => {
 
     const result = await req.json();
 
-    if (result.id) {
+    if (result && result.id) {
       Router.push("/session/" + result.id);
+    } else {
+      setError(result && result.error ? result.error : 'Timed Out');
     }
   };
 
@@ -134,6 +137,12 @@ const Home = props => {
           </div>
         )}
       </form>
+
+      {error && (
+        <div className="row">
+          <h2>Error: {error}</h2>
+        </div>
+      )}
 
       {props.sessions && props.sessions.length && (
         <>

@@ -10,6 +10,7 @@ const Session = props => {
   const { url } = props;
   const [history, setHistory] = useState(props.session.story);
   const [input, setInput] = useState("");
+  const [error, setError] = useState("");
 
   const setField = e => {
     setInput(e.currentTarget.value);
@@ -28,8 +29,14 @@ const Session = props => {
     const session = await req.json();
 
     setInput("");
-    if (session) {
+    if (session && !session.error) {
       setHistory(session);
+    } else {
+      setError(
+        session && session.error
+          ? session.error
+          : "Timed out, AI Dungeon too slow"
+      );
     }
   };
 
@@ -68,6 +75,12 @@ const Session = props => {
           </ScrollToBottom>
         </div>
       </div>
+
+      {error && (
+        <div className="row">
+          <h2>Error: {error}</h2>
+        </div>
+      )}
     </div>
   );
 };
