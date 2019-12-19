@@ -42,7 +42,9 @@ const Session = props => {
         setError(session ? session.error : "Timed out, AI Dungeon too slow");
       }
     } catch (e) {
-      setError("Time out, AI Dungeon too slow");
+      setError(
+        "Time out, AI Dungeon too slow. The request may have already gotten through, in which case refreshing will continue"
+      );
     }
   };
 
