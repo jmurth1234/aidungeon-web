@@ -70,6 +70,12 @@ const Home = props => {
     }
   };
 
+  const logout = () => {
+    nookies.set({}, "auth", "");
+
+    Router.push("/");
+  }
+
   return (
     <div>
       <Head>
@@ -81,6 +87,7 @@ const Home = props => {
 
       <div className="hero">
         <h1 className="title">Welcome</h1>
+        <p className="description"><a href="#" onClick={logout}>Logout</a></p>
       </div>
 
       <div className="row">

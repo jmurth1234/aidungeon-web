@@ -25,7 +25,8 @@ const Index = () => {
     }
   };
 
-  const checkEmail = async () => {
+  const checkEmail = async e => {
+    e.preventDefault();
     const request = await fetch("/api/auth", {
       method: "POST",
       headers: {
@@ -44,7 +45,9 @@ const Index = () => {
     }
   };
 
-  const login = async () => {
+  const handleLogin = async e => {
+    e.preventDefault();
+
     const request = await fetch("/api/auth", {
       method: "POST",
       headers: {
@@ -65,7 +68,9 @@ const Index = () => {
     }
   };
 
-  const register = async () => {
+  const handleRegister = async e=> {
+    e.preventDefault();
+
     const request = await fetch("/api/modify-user", {
       method: "POST",
       headers: {
@@ -83,6 +88,12 @@ const Index = () => {
     }
   };
 
+  const formActions = {
+    email: checkEmail,
+    login: handleLogin,
+    register: handleRegister
+  };
+
   return (
     <div>
       <Head>
@@ -96,63 +107,65 @@ const Index = () => {
         <h1 className="title">Welcome to AIDungeon Web</h1>
         <p className="description">To get started, enter your email address.</p>
 
-        <div className="row">
-          <input
-            type="email"
-            name="email"
-            value={data.email}
-            placeholder="Enter Email Address"
-            onChange={setField}
-          />
-        </div>
-
-        {stage === "email" && (
+        <form id={stage} onSubmit={formActions[stage]}>
           <div className="row">
-            <a href="#" className="button" onClick={checkEmail}>
-              Next
-            </a>
+            <input
+              type="email"
+              name="email"
+              value={data.email}
+              placeholder="Enter Email Address"
+              onChange={setField}
+            />
           </div>
-        )}
 
-        {stage === "login" && (
-          <>
+          {stage === "email" && (
             <div className="row">
-              <input
-                type="password"
-                name="password"
-                value={data.password}
-                placeholder="Enter Password"
-                onChange={setField}
-              />
-            </div>
-
-            <div className="row">
-              <a href="#" className="button" onClick={login}>
-                Login
+              <a href="#" className="button" onClick={checkEmail}>
+                Next
               </a>
             </div>
-          </>
-        )}
+          )}
 
-        {stage === "register" && (
-          <>
-            <div className="row">
-              <input
-                type="password"
-                name="password"
-                value={data.password}
-                placeholder="Enter Password"
-                onChange={setField}
-              />
-            </div>
+          {stage === "login" && (
+            <>
+              <div className="row">
+                <input
+                  type="password"
+                  name="password"
+                  value={data.password}
+                  placeholder="Enter Password"
+                  onChange={setField}
+                />
+              </div>
 
-            <div className="row">
-              <a href="#" className="button" onClick={register}>
-                Register
-              </a>
-            </div>
-          </>
-        )}
+              <div className="row">
+                <button type='submit' className="button" onClick={handleLogin}>
+                  Login
+                </button>
+              </div>
+            </>
+          )}
+
+          {stage === "register" && (
+            <>
+              <div className="row">
+                <input
+                  type="password"
+                  name="password"
+                  value={data.password}
+                  placeholder="Enter Password"
+                  onChange={setField}
+                />
+              </div>
+
+              <div className="row">
+                <button type='submit' className="button" onClick={handleRegister}>
+                  Register
+                </button>
+              </div>
+            </>
+          )}
+        </form>
 
         {error && (
           <div className="row">
@@ -162,12 +175,32 @@ const Index = () => {
 
         <div className="row">
           <h2>
-            <a href="https://github.com/rymate1234/aidungeon-web">View the source on Github</a>
+            <a href="https://github.com/rymate1234/aidungeon-web">
+              View the source on Github
+            </a>
           </h2>
         </div>
       </div>
     </div>
   );
+};
+
+Index.getInitialProps = async ctx => {
+  const cookies = nookies.get(ctx);
+  const { res } = ctx;
+
+  if (cookies.auth) {
+    if (res) {
+      res.writeHead(302, {
+        Location: "/home"
+      });
+      return res.end();
+    } else {
+      return Router.push("/home");
+    }
+  }
+
+  return {};
 };
 
 export default Index;

@@ -56,6 +56,7 @@ const Nav = () => (
     }
     input {
       width: 100%;
+      padding: 5px;
     }
     .button {
       width: 200px;
@@ -87,7 +88,6 @@ const Nav = () => (
     }
 
     .terminal input {
-      padding: 5px;
       display: block;
       background: #111111;
       border: 0;
