@@ -5,6 +5,11 @@ import get from "../../lib/basic-get";
 import nookies from "nookies";
 import Router from "next/router";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { css } from "glamor";
+
+const termCss = css({
+  maxHeight: 600
+});
 
 const Session = props => {
   const { url } = props;
@@ -55,14 +60,13 @@ const Session = props => {
       </div>
 
       <div className="row">
-        <div className="terminal">
-          <ScrollToBottom>
+        <ScrollToBottom className={termCss}>
+          <div className="terminal">
             {history.map((item, i) => (
               <div className={item.type} key={i}>
                 {item.value}
               </div>
             ))}
-
             <form onSubmit={sendLine}>
               <input
                 className="input"
@@ -73,8 +77,8 @@ const Session = props => {
                 onChange={setField}
               />
             </form>
-          </ScrollToBottom>
-        </div>
+          </div>
+        </ScrollToBottom>
       </div>
 
       {error && (

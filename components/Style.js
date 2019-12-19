@@ -69,10 +69,8 @@ const Nav = () => (
     }
 
     .terminal {
-      max-height: 600px;
       font-family: monospace;
       font-size: 14px;
-      overflow: auto;
       background-color: #000000;
       color: #ffffff;
       padding: 10px;
