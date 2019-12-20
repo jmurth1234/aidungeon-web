@@ -1,6 +1,6 @@
 import React from "react";
 
-const Nav = () => (
+const Style = () => (
   <style jsx global>{`
     :global(body) {
       margin: 0;
@@ -39,7 +39,7 @@ const Nav = () => (
     .title {
       margin: 0;
       width: 100%;
-      padding-top: 80px;
+      padding-top: 20px;
       line-height: 1.15;
       font-size: 48px;
     }
@@ -49,7 +49,7 @@ const Nav = () => (
     }
     .row {
       max-width: 880px;
-      margin: 80px auto 40px;
+      margin: 20px auto 20px;
       display: flex;
       flex-direction: row;
       justify-content: space-around;
@@ -102,4 +102,4 @@ const Nav = () => (
   `}</style>
 );
 
-export default Nav;
+export default Style;
